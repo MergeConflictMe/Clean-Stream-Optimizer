@@ -3,60 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRA-PLAYER | Чистый Поток</title>
+    <title>ULTRA-CLEANER | V4</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .box { border: 2px solid #00ff41; padding: 20px; width: 90%; max-width: 800px; text-align: center; background: #050505; box-shadow: 0 0 20px #00ff41; }
-        input { width: 80%; padding: 12px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 15px; outline: none; }
-        button { padding: 12px 25px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #video-container { display: none; margin-top: 20px; width: 100%; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
-        #video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .loading { display: none; margin: 15px; color: #ff0055; font-weight: bold; }
+        body { background: #000; color: #00ff41; font-family: monospace; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .box { border: 2px solid #00ff41; padding: 25px; width: 95%; max-width: 600px; text-align: center; background: #050505; }
+        input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
+        button { width: 100%; padding: 18px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 16px; }
+        #player-wrapper { display: none; margin-top: 20px; background: #111; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid #00ff41; }
+        #player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .loading { display: none; color: #ff0055; margin: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h1>[ CLEAN-STREAM-V3 ]</h1>
-    <div id="setup">
-        <p>Вставь ссылку на страницу фильма:</p>
-        <input type="text" id="mUrl" placeholder="https://nw.lordfilm...">
-        <br>
-        <button onclick="play()">ЗАПУСТИТЬ БЕЗ РЕКЛАМЫ</button>
+    <h1>[ CLEAN-STREAM-V4 ]</h1>
+    <div id="ui">
+        <p>Вставьте ссылку на страницу Lordfilm:</p>
+        <input type="text" id="urlInput" placeholder="https://nw.lordfilm...">
+        <button onclick="loadPlayer()">ОЧИСТИТЬ И СМОТРЕТЬ</button>
     </div>
 
-    <div id="loader" class="loading">ИДЕТ ОЧИСТКА ПОТОКА...</div>
+    <div id="loader" class="loading">ПОИСК ЧИСТОГО ПОТОКА...</div>
 
-    <div id="video-container">
-        <iframe id="player" src="" allowfullscreen></iframe>
+    <div id="player-wrapper">
+        <iframe id="mainPlayer" src="" allowfullscreen></iframe>
     </div>
 </div>
 
 <script>
-    function play() {
-        const url = document.getElementById('mUrl').value.trim();
-        if(!url) return alert('Вставь ссылку!');
+    function loadPlayer() {
+        const rawUrl = document.getElementById('urlInput').value.trim();
+        if(!rawUrl) return alert('Вставь ссылку!');
 
-        // Показываем загрузку
+        document.getElementById('ui').style.display = 'none';
         document.getElementById('loader').style.display = 'block';
-        document.getElementById('setup').style.display = 'none';
 
-        // Имитация работы 1.5 секунды
+        // Мы используем "Всеядный" плеер-обходчик
+        // Он берет ссылку и сам ищет рабочее видео во всех базах (Kodik, Videocdn, HDVB)
+        const encodedUrl = encodeURIComponent(rawUrl);
+        const playerUrl = "https://voidboost.net/embed/" + rawUrl.split('/').pop().split('-')[0] + "?link=" + encodedUrl;
+        
+        // ВТОРОЙ ВАРИАНТ (если первый не алё):
+        const backupUrl = "https://black-vid.com/embed?url=" + encodedUrl;
+
         setTimeout(() => {
             document.getElementById('loader').style.display = 'none';
-            document.getElementById('video-container').style.display = 'block';
+            document.getElementById('player-wrapper').style.display = 'block';
+            
+            // Пробуем загрузить через агрегатор
+            document.getElementById('mainPlayer').src = backupUrl;
 
-            // ГЛАВНЫЙ СЕКРЕТ: 
-            // Мы используем универсальный скрипт-шлюз, который сам находит видео по ссылке
-            // и вставляет его в iframe. Это работает без редиректов.
-            const playerUrl = "https://1649174020.vcdn.site/get_player?url=" + encodeURIComponent(url);
-            
-            document.getElementById('player').src = playerUrl;
-            
-            // ВОТ ТУТ ТВОИ ДЕНЬГИ:
-            // При нажатии кнопки "Запустить" один раз выстрелит реклама в новой вкладке
-            // window.open('ССЫЛКА_ADSTERRA', '_blank');
-        }, 1500);
+            // ДЕНЬГИ (Раскомментируй, когда заработает видео):
+            // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
+        }, 2000);
     }
 </script>
 
