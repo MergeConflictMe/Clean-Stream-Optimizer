@@ -3,59 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER v5 | Full Mask</title>
+    <title>LORD-OPTIMIZER | Оренбург</title>
     <style>
-        body { background: #000; margin: 0; padding: 0; font-family: sans-serif; overflow: hidden; }
-        #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #00ff41; }
-        input { width: 80%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; }
-        button { padding: 15px 30px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; }
-        
-        /* Контейнер для сайта */
-        #site-wrapper { width: 100vw; height: 100vh; display: none; }
-        iframe { width: 100%; height: 100%; border: none; }
-
-        /* ЧЕРНАЯ МАСКА - перекрывает бока и верх, где реклама */
-        .mask { position: fixed; background: #000; z-index: 100; pointer-events: none; }
-        .top-mask { top: 0; left: 0; width: 100%; height: 150px; } /* Закрывает шапку */
-        .left-mask { top: 0; left: 0; width: 15%; height: 100%; } /* Закрывает левый бок */
-        .right-mask { top: 0; right: 0; width: 15%; height: 100%; } /* Закрывает правый бок */
+        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { border: 2px solid #00ff41; padding: 30px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 20px #00ff41; }
+        input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 18px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 18px; text-transform: uppercase; }
+        #status { display: none; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div id="ui-layer">
-    <h1>[ CLEAN-MASK V5 ]</h1>
-    <p>Вставь ссылку на Лордфильм:</p>
-    <input type="text" id="url" placeholder="https://nw.lordfilm...">
-    <button onclick="activate()">ОЧИСТИТЬ И СМОТРЕТЬ</button>
-</div>
+<div class="container">
+    <h1>[ LORD-FIXER ]</h1>
+    <div id="ui">
+        <p>Вставь ссылку для обхода рекламы:</p>
+        <input type="text" id="target" placeholder="https://nw.lordfilm...">
+        <button class="btn" onclick="run()">ОЧИСТИТЬ И СМОТРЕТЬ</button>
+    </div>
 
-<div id="site-wrapper">
-    <div class="mask top-mask"></div>
-    <div class="mask left-mask"></div>
-    <div class="mask right-mask"></div>
-    
-    <iframe id="target-site" src=""></iframe>
+    <div id="status">
+        <div id="log">> ПОДКЛЮЧЕНИЕ К ПРОКСИ...</div>
+        <p>Подождите 3 секунды...</p>
+    </div>
 </div>
 
 <script>
-    function activate() {
-        const link = document.getElementById('url').value.trim();
-        if(!link) return;
+    function run() {
+        const url = document.getElementById('target').value.trim();
+        if(!url) return alert('Вставь ссылку!');
 
-        // ДЕНЬГИ (Adsterra) - вылетает при нажатии
-        // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
+        // 1. ПОКАЗЫВАЕМ ЗАГРУЗКУ
+        document.getElementById('ui').style.display = 'none';
+        document.getElementById('status').style.display = 'block';
 
-        document.getElementById('ui-layer').style.display = 'none';
-        document.getElementById('site-wrapper').style.display = 'block';
-        
-        // Загружаем сам сайт
-        document.getElementById('target-site').src = link;
-        
-        // Авто-скролл вниз к плееру через 3 секунды, чтобы юзер не видел рекламу сверху
+        // 2. ОТКРЫВАЕМ ТВОЮ РЕКЛАМУ (ЗАМЕНИ НА СВОЮ ССЫЛКУ ADSTERRA)
+        // Если пока нет Adsterra, оставь Google для теста
+        window.open('https://google.com', '_blank'); 
+
+        // 3. ЧЕРЕЗ 2 СЕКУНДЫ ПЕРЕКИДЫВАЕМ НА ФИЛЬМ
         setTimeout(() => {
-            window.scrollTo(0, 500); 
-        }, 3000);
+            // Прямой переход на Лордфильм. 
+            // Это сработает ВСЕГДА, потому что браузер просто открывает сайт.
+            window.location.href = url;
+        }, 2000);
     }
 </script>
 
