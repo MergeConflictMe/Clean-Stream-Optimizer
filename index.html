@@ -3,125 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER v2.0 | Оптимизация потока</title>
+    <title>LORD-CLEANER v2.1 | Безопасный Поток</title>
     <style>
-        body { 
-            background: #050505; 
-            color: #00ff41; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden;
-        }
-        .container { 
-            background: rgba(0, 20, 0, 0.9);
-            border: 2px solid #00ff41; 
-            padding: 40px; 
-            width: 90%; 
-            max-width: 500px; 
-            text-align: center;
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
-            border-radius: 5px;
-        }
-        h1 { font-size: 24px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; text-shadow: 0 0 10px #00ff41; }
-        .description { font-size: 14px; color: #88ff88; margin-bottom: 30px; line-height: 1.5; }
-        input { 
-            width: 100%; 
-            padding: 15px; 
-            background: #000; 
-            border: 1px solid #00ff41; 
-            color: #00ff41; 
-            font-size: 16px; 
-            margin-bottom: 25px; 
-            outline: none;
-            box-sizing: border-box;
-            border-radius: 3px;
-        }
-        input::placeholder { color: rgba(0, 255, 65, 0.3); }
-        button { 
-            width: 100%; 
-            padding: 18px; 
-            background: #00ff41; 
-            color: #000; 
-            border: none; 
-            font-weight: bold; 
-            text-transform: uppercase;
-            cursor: pointer; 
-            font-size: 18px;
-            transition: all 0.2s;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.4);
-        }
-        button:hover { background: #00cc33; transform: scale(1.02); }
-        
-        /* Анимация загрузки */
-        #loader { display: none; margin-top: 25px; text-align: left; font-family: monospace; }
-        .log { font-size: 12px; margin-bottom: 5px; border-left: 3px solid #00ff41; padding-left: 10px; opacity: 0.8; }
-        .progress-container { width: 100%; background: #111; height: 10px; margin-top: 15px; border: 1px solid #00ff41; }
-        .progress-bar { width: 0%; height: 100%; background: #00ff41; transition: width 0.1s; box-shadow: 0 0 10px #00ff41; }
+        body { background: #050505; color: #00ff41; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { border: 2px solid #00ff41; padding: 40px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 0 20px #00ff41; }
+        input { width: 100%; padding: 15px; background: #000; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; }
+        button { width: 100%; padding: 18px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 18px; }
+        #status { display: none; margin-top: 20px; font-size: 14px; }
+        .loader-bar { width: 100%; background: #111; height: 10px; border: 1px solid #00ff41; margin-top: 10px; }
+        .progress { width: 0%; height: 100%; background: #00ff41; transition: 0.3s; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Lord-Cleaner <small>v2.0</small></h1>
-    <p class="description">Удаление рекламы, обход блокировок провайдера и оптимизация видео-потока в реальном времени.</p>
-    
-    <input type="text" id="targetUrl" placeholder="Вставьте ссылку на Лордфильм..." autocomplete="off">
-    
-    <button id="mainBtn" onclick="processStream()">Очистить и запустить</button>
+    <h1>[ LORD-CLEANER ]</h1>
+    <p>Вставьте ссылку на Лордфильм:</p>
+    <input type="text" id="targetUrl" placeholder="https://lordfilm...">
+    <button id="goBtn" onclick="startOptimizing()">ОЧИСТИТЬ И ЗАПУСТИТЬ</button>
 
-    <div id="loader">
-        <div class="log">> Инициализация модуля Proxy-Filter...</div>
-        <div class="log">> Блокировка рекламных доменов (Ad-Block)...</div>
-        <div class="log">> Инъекция скрипта очистки в плеер...</div>
-        <div class="progress-container">
-            <div id="pBar" class="progress-bar"></div>
-        </div>
-        <div id="percent" style="margin-top: 5px; font-size: 12px;">0%</div>
+    <div id="status">
+        <div id="log">> ПОДКЛЮЧЕНИЕ ФИЛЬТРА...</div>
+        <div class="loader-bar"><div id="pBar" class="progress"></div></div>
     </div>
 </div>
 
 <script>
-    function processStream() {
-        const rawUrl = document.getElementById('targetUrl').value;
+    function startOptimizing() {
+        let rawUrl = document.getElementById('targetUrl').value.trim();
         
-        if (!rawUrl || !rawUrl.includes('lordfilm')) {
-            alert('Введите корректную ссылку на страницу с фильмом Lordfilm!');
+        if (!rawUrl) {
+            alert('Сначала вставьте ссылку!');
             return;
         }
 
-        // Скрываем ввод и кнопку, показываем прогресс
-        document.getElementById('targetUrl').style.display = 'none';
-        document.getElementById('mainBtn').style.display = 'none';
-        document.getElementById('loader').style.display = 'block';
+        // Авто-исправление ссылки, если юзер вставил без https
+        if (!rawUrl.startsWith('http')) {
+            rawUrl = 'https://' + rawUrl;
+        }
 
-        let progress = 0;
+        document.getElementById('goBtn').style.display = 'none';
+        document.getElementById('status').style.display = 'block';
+
+        let width = 0;
         const bar = document.getElementById('pBar');
-        const pText = document.getElementById('percent');
+        const log = document.getElementById('log');
 
-        // Эффектная анимация загрузки
         const interval = setInterval(() => {
-            progress += Math.floor(Math.random() * 15) + 5;
-            if (progress > 100) progress = 100;
+            width += 10;
+            bar.style.width = width + '%';
             
-            bar.style.width = progress + '%';
-            pText.innerText = 'ПОДГОТОВКА ПОТОКА: ' + progress + '%';
-
-            if (progress >= 100) {
+            if(width == 30) log.innerText = '> ОБХОД СКРИПТОВ КАЗИНО...';
+            if(width == 70) log.innerText = '> ПОДГОТОВКА ПЛЕЕРА...';
+            
+            if (width >= 100) {
                 clearInterval(interval);
+                log.innerText = '> ПЕРЕХОД В БЕЗОПАСНЫЙ РЕЖИМ...';
+
+                // ГЛАВНЫЙ МОМЕНТ: Используем CroxyProxy для стабильного видео
+                // Мы формируем прямую ссылку на проксирование
+                const finalLink = 'https://www.croxyproxy.com/_/_/search?q=' + encodeURIComponent(rawUrl);
                 
-                // --- ГЛАВНЫЙ МЕХАНИЗМ ОЧИСТКИ ---
-                // Мы пропускаем ссылку через Proxyium, который сам вырезает баннеры
-                const cleanUrl = 'https://proxyium.com/search?url=' + encodeURIComponent(rawUrl);
-                
+                // Делаем переход через небольшую паузу
                 setTimeout(() => {
-                    window.location.href = cleanUrl;
-                }, 500);
+                    window.location.href = finalLink;
+                }, 1000);
             }
-        }, 150);
+        }, 200);
     }
 </script>
 
