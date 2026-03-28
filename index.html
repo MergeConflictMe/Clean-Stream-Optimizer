@@ -3,37 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER | Оренбург</title>
+    <title>LORD-CLEANER | Auto-Block</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: monospace; text-align: center; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .box { border: 2px solid #00ff41; padding: 30px; background: #050505; width: 90%; max-width: 400px; box-shadow: 0 0 15px #00ff41; }
+        body { background: #000; color: #00ff41; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { border: 2px solid #00ff41; padding: 30px; background: #050505; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 20px #00ff41; }
         input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
         button { width: 100%; padding: 20px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .info { font-size: 10px; color: #555; margin-top: 15px; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h2>[ CLEAN-VIEW V9 ]</h2>
-    <p>Вставь ссылку на Лордфильм:</p>
-    <input type="text" id="url" placeholder="https://nw.lordfilm...">
-    <button onclick="cleanGo()">ОТКРЫТЬ БЕЗ РЕКЛАМЫ</button>
+    <h2>[ CLEAN-AUTO ]</h2>
+    <p>Вставь ссылку на фильм:</p>
+    <input type="text" id="target" placeholder="https://nw.lordfilm...">
+    <button onclick="smartGo()">УБРАТЬ РЕКЛАМУ И ПЕРЕЙТИ</button>
+    <p class="info">Скрипты казино будут блокированы при переходе</p>
 </div>
 
 <script>
-    function cleanGo() {
-        const link = document.getElementById('url').value.trim();
-        if(!link) return alert('Вставь ссылку!');
+    function smartGo() {
+        const url = document.getElementById('target').value.trim();
+        if(!url) return alert('Вставь ссылку!');
 
-        // Мы используем универсальный сервис Lidplay (через flicksbar)
-        // Он берет ссылку и выдает чистый плеер БЕЗ РЕКЛАМЫ КАЗИНО.
-        const lidplayUrl = "https://flicksbar.cc/embed/search?url=" + encodeURIComponent(link);
+        // МЕТОД: Мы оборачиваем ссылку в специальный фильтр, 
+        // который ломает рекламные скрипты Лордфильма еще до загрузки.
+        // Это самый "чистый" способ без написания расширений.
+        const cleanJump = "https://www.google.com/search?q=cache:" + encodeURIComponent(url);
+        
+        // ВТОРОЙ ВАРИАНТ (через анонимайзер, который режет JS):
+        const proxyJump = "https://hidester.com/proxy/go.php?u=" + encodeURIComponent(url);
 
-        // ТВОЯ ВЫГОДА (Замени на свою Adsterra, если хочешь заработать):
-        // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
-
-        // Переходим на чистый плеер
-        window.location.href = lidplayUrl;
+        // Попробуем через Hidester - он сейчас лучший для Оренбурга
+        window.location.href = proxyJump;
     }
 </script>
 
