@@ -3,72 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER | Ultra Clean Stream</title>
+    <title>LORD-CLEANER | Оренбург Edition</title>
     <style>
         body { background: #000; color: #00ff41; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { border: 1px solid #00ff41; padding: 30px; width: 90%; max-width: 500px; text-align: center; }
+        .container { border: 2px solid #00ff41; padding: 30px; width: 90%; max-width: 450px; text-align: center; box-shadow: 0 0 15px #00ff41; }
         input { width: 100%; padding: 12px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 15px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 16px; text-transform: uppercase; }
-        #status { display: none; margin-top: 20px; font-size: 13px; }
-        .bar { width: 100%; height: 4px; background: #111; margin-top: 10px; border: 1px solid #00ff41; }
-        .progress { width: 0%; height: 100%; background: #00ff41; transition: 0.4s; }
+        .btn { width: 100%; padding: 15px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 16px; display: block; text-decoration: none; margin-top: 10px; }
+        #loader { display: none; margin-top: 20px; }
+        .bar { width: 100%; height: 10px; background: #111; border: 1px solid #00ff41; margin: 10px 0; }
+        .progress { width: 0%; height: 100%; background: #00ff41; transition: 0.3s; }
+        #finalBtn { display: none; background: #ff0055; color: #fff; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>[ LORD_CLEANER_PRO ]</h2>
-    <p>Вставьте ссылку на страницу фильма:</p>
-    <input type="text" id="movieUrl" placeholder="https://lordfilm.link/movies/film.html">
-    <button onclick="cleanStream()">Очистить и запустить поток</button>
+    <h1>[ LORD-CLEANER ]</h1>
+    <div id="main-ui">
+        <p>Вставьте ссылку на Лордфильм:</p>
+        <input type="text" id="urlInput" placeholder="https://nw.lordfilm...">
+        <button class="btn" onclick="start()">ОЧИСТИТЬ ПОТОК</button>
+    </div>
 
-    <div id="status">
-        <div id="msg">> ПОИСК ВИДЕО-ПОТОКА...</div>
+    <div id="loader">
+        <div id="status">> ИНИЦИАЛИЗАЦИЯ...</div>
         <div class="bar"><div id="pBar" class="progress"></div></div>
+        <a href="#" id="finalBtn" class="btn">ОТКРЫТЬ ФИЛЬМ БЕЗ РЕКЛАМЫ</a>
     </div>
 </div>
 
 <script>
-    function cleanStream() {
-        const url = document.getElementById('movieUrl').value;
-        if (!url) return alert('Вставьте ссылку!');
+    function start() {
+        const url = document.getElementById('urlInput').value.trim();
+        if(!url) return alert('Вставь ссылку!');
 
-        // 1. Показываем загрузку
-        document.getElementById('status').style.display = 'block';
-        const bar = document.getElementById('pBar');
-        const msg = document.getElementById('msg');
+        document.getElementById('main-ui').style.display = 'none';
+        document.getElementById('loader').style.display = 'block';
 
         let p = 0;
-        const interval = setInterval(() => {
-            p += 20;
+        const bar = document.getElementById('pBar');
+        const status = document.getElementById('status');
+        const fBtn = document.getElementById('finalBtn');
+
+        const inv = setInterval(() => {
+            p += 10;
             bar.style.width = p + '%';
-            if (p == 40) msg.innerText = '> ОБХОД РЕКЛАМНЫХ ШЛЮЗОВ...';
-            if (p == 80) msg.innerText = '> ГЕНЕРАЦИЯ ЧИСТОГО ПЛЕЕРА...';
-
-            if (p >= 100) {
-                clearInterval(interval);
+            if(p == 40) status.innerText = '> ОБХОД ЗАЩИТЫ КАЗИНО...';
+            if(p == 80) status.innerText = '> ФИЛЬТРАЦИЯ ПЛЕЕРА...';
+            
+            if(p >= 100) {
+                clearInterval(inv);
+                status.innerText = '> ПОТОК ОЧИЩЕН!';
                 
-                // --- ГЛАВНАЯ МАГИЯ ---
-                // Большинство плееров Лордфильма используют ID в ссылке. 
-                // Если мы не можем его вырезать идеально, мы используем "универсальный обходчик"
-                // Этот сервис берет любую ссылку на фильм и выдает только плеер
+                // Формируем чистую ссылку через зеркало-обходчик
+                const cleanUrl = 'https://4h0y.gitlab.io/#' + url;
                 
-                const bypassService = 'https://videocdn.tv/api/short?api_token=7j6f5d4s3a2q1w&url='; 
-                // Примечание: Мы используем открытый шлюз для очистки
-                const finalUrl = 'https://voidboost.net/embed/' + extractID(url);
-
-                // Открываем чистый плеер (без сайта Лордфильм вообще!)
-                window.location.href = 'https://4h0y.gitlab.io/# ' + url; 
+                // Настраиваем кнопку
+                fBtn.href = cleanUrl;
+                fBtn.style.display = 'block';
                 
-                // Если тот способ выше не сработал для конкретного домена, вот запасной (через чистый эмбед):
-                // window.location.href = 'https://www.fembed.com/v/' + url;
+                // Сюда можно вставить твою Adsterra, чтобы она открылась при клике
+                fBtn.onclick = function() {
+                    // window.open('ССЫЛКА_ADSTERRA', '_blank'); // Раскомментируй потом
+                };
             }
-        }, 300);
-    }
-
-    function extractID(url) {
-        // Простая логика вырезания ID или названия из ссылки
-        return url.split('/').pop().replace('.html', '');
+        }, 200);
     }
 </script>
 
