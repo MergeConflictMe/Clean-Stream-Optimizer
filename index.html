@@ -3,60 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRA-CLEANER | V4</title>
+    <title>LORD-CLEANER v5 | Full Mask</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: monospace; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-        .box { border: 2px solid #00ff41; padding: 25px; width: 95%; max-width: 600px; text-align: center; background: #050505; }
-        input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 18px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 16px; }
-        #player-wrapper { display: none; margin-top: 20px; background: #111; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid #00ff41; }
-        #player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .loading { display: none; color: #ff0055; margin: 15px; font-weight: bold; }
+        body { background: #000; margin: 0; padding: 0; font-family: sans-serif; overflow: hidden; }
+        #ui-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #00ff41; }
+        input { width: 80%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; }
+        button { padding: 15px 30px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; }
+        
+        /* Контейнер для сайта */
+        #site-wrapper { width: 100vw; height: 100vh; display: none; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* ЧЕРНАЯ МАСКА - перекрывает бока и верх, где реклама */
+        .mask { position: fixed; background: #000; z-index: 100; pointer-events: none; }
+        .top-mask { top: 0; left: 0; width: 100%; height: 150px; } /* Закрывает шапку */
+        .left-mask { top: 0; left: 0; width: 15%; height: 100%; } /* Закрывает левый бок */
+        .right-mask { top: 0; right: 0; width: 15%; height: 100%; } /* Закрывает правый бок */
     </style>
 </head>
 <body>
 
-<div class="box">
-    <h1>[ CLEAN-STREAM-V4 ]</h1>
-    <div id="ui">
-        <p>Вставьте ссылку на страницу Lordfilm:</p>
-        <input type="text" id="urlInput" placeholder="https://nw.lordfilm...">
-        <button onclick="loadPlayer()">ОЧИСТИТЬ И СМОТРЕТЬ</button>
-    </div>
+<div id="ui-layer">
+    <h1>[ CLEAN-MASK V5 ]</h1>
+    <p>Вставь ссылку на Лордфильм:</p>
+    <input type="text" id="url" placeholder="https://nw.lordfilm...">
+    <button onclick="activate()">ОЧИСТИТЬ И СМОТРЕТЬ</button>
+</div>
 
-    <div id="loader" class="loading">ПОИСК ЧИСТОГО ПОТОКА...</div>
-
-    <div id="player-wrapper">
-        <iframe id="mainPlayer" src="" allowfullscreen></iframe>
-    </div>
+<div id="site-wrapper">
+    <div class="mask top-mask"></div>
+    <div class="mask left-mask"></div>
+    <div class="mask right-mask"></div>
+    
+    <iframe id="target-site" src=""></iframe>
 </div>
 
 <script>
-    function loadPlayer() {
-        const rawUrl = document.getElementById('urlInput').value.trim();
-        if(!rawUrl) return alert('Вставь ссылку!');
+    function activate() {
+        const link = document.getElementById('url').value.trim();
+        if(!link) return;
 
-        document.getElementById('ui').style.display = 'none';
-        document.getElementById('loader').style.display = 'block';
+        // ДЕНЬГИ (Adsterra) - вылетает при нажатии
+        // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
 
-        // Мы используем "Всеядный" плеер-обходчик
-        // Он берет ссылку и сам ищет рабочее видео во всех базах (Kodik, Videocdn, HDVB)
-        const encodedUrl = encodeURIComponent(rawUrl);
-        const playerUrl = "https://voidboost.net/embed/" + rawUrl.split('/').pop().split('-')[0] + "?link=" + encodedUrl;
+        document.getElementById('ui-layer').style.display = 'none';
+        document.getElementById('site-wrapper').style.display = 'block';
         
-        // ВТОРОЙ ВАРИАНТ (если первый не алё):
-        const backupUrl = "https://black-vid.com/embed?url=" + encodedUrl;
-
+        // Загружаем сам сайт
+        document.getElementById('target-site').src = link;
+        
+        // Авто-скролл вниз к плееру через 3 секунды, чтобы юзер не видел рекламу сверху
         setTimeout(() => {
-            document.getElementById('loader').style.display = 'none';
-            document.getElementById('player-wrapper').style.display = 'block';
-            
-            // Пробуем загрузить через агрегатор
-            document.getElementById('mainPlayer').src = backupUrl;
-
-            // ДЕНЬГИ (Раскомментируй, когда заработает видео):
-            // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
-        }, 2000);
+            window.scrollTo(0, 500); 
+        }, 3000);
     }
 </script>
 
