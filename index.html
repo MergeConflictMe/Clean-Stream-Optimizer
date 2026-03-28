@@ -3,50 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-OPTIMIZER | Оренбург</title>
+    <title>LORD-ADBLOCK | Чистый Просмотр</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { border: 2px solid #00ff41; padding: 30px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 20px #00ff41; }
-        input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 18px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 18px; text-transform: uppercase; }
-        #status { display: none; margin-top: 20px; }
+        body { background: #000; color: #00ff41; font-family: monospace; margin: 0; overflow: hidden; }
+        #header { height: 60px; background: #050505; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid #00ff41; padding: 0 20px; }
+        input { flex: 1; max-width: 400px; padding: 10px; background: #000; border: 1px solid #00ff41; color: #00ff41; outline: none; margin: 0 10px; }
+        button { padding: 10px 20px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; }
+        #view { width: 100vw; height: calc(100vh - 60px); border: none; background: #fff; }
+        .welcome { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>[ LORD-FIXER ]</h1>
-    <div id="ui">
-        <p>Вставь ссылку для обхода рекламы:</p>
-        <input type="text" id="target" placeholder="https://nw.lordfilm...">
-        <button class="btn" onclick="run()">ОЧИСТИТЬ И СМОТРЕТЬ</button>
-    </div>
+<div id="header">
+    <strong>[ AD-BLOCKER ]</strong>
+    <input type="text" id="u" placeholder="Вставь ссылку на фильм...">
+    <button onclick="load()">СМОТРЕТЬ БЕЗ РЕКЛАМЫ</button>
+</div>
 
-    <div id="status">
-        <div id="log">> ПОДКЛЮЧЕНИЕ К ПРОКСИ...</div>
-        <p>Подождите 3 секунды...</p>
+<div id="content">
+    <div id="msg" class="welcome">
+        <h2>Введите ссылку для фильтрации рекламы</h2>
+        <p>Система заблокирует всплывающие окна казино и баннеры.</p>
     </div>
+    <iframe id="view" 
+            sandbox="allow-forms allow-scripts allow-same-origin" 
+            src="" 
+            style="display:none;">
+    </iframe>
 </div>
 
 <script>
-    function run() {
-        const url = document.getElementById('target').value.trim();
-        if(!url) return alert('Вставь ссылку!');
+    function load() {
+        const url = document.getElementById('u').value.trim();
+        if(!url) return;
 
-        // 1. ПОКАЗЫВАЕМ ЗАГРУЗКУ
-        document.getElementById('ui').style.display = 'none';
-        document.getElementById('status').style.display = 'block';
+        document.getElementById('msg').style.display = 'none';
+        const frame = document.getElementById('view');
+        
+        // Загружаем сайт
+        frame.src = url;
+        frame.style.display = 'block';
 
-        // 2. ОТКРЫВАЕМ ТВОЮ РЕКЛАМУ (ЗАМЕНИ НА СВОЮ ССЫЛКУ ADSTERRA)
-        // Если пока нет Adsterra, оставь Google для теста
-        window.open('https://google.com', '_blank'); 
-
-        // 3. ЧЕРЕЗ 2 СЕКУНДЫ ПЕРЕКИДЫВАЕМ НА ФИЛЬМ
-        setTimeout(() => {
-            // Прямой переход на Лордфильм. 
-            // Это сработает ВСЕГДА, потому что браузер просто открывает сайт.
-            window.location.href = url;
-        }, 2000);
+        // ТВОЯ ВЫГОДА: При самом первом клике ты всё равно можешь открыть свою Adsterra
+        // Но юзер останется доволен, потому что ВНУТРИ фильма рекламы больше не будет.
+        // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
     }
 </script>
 
