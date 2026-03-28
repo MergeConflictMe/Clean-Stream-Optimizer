@@ -3,56 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER | Direct Stream</title>
+    <title>LORD-CLEANER | Оренбург Power</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: monospace; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .box { border: 2px solid #00ff41; padding: 25px; width: 90%; max-width: 600px; text-align: center; }
-        input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 18px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; font-size: 16px; }
-        #player-box { display: none; width: 100%; margin-top: 20px; position: relative; padding-bottom: 56.25%; height: 0; }
-        #player-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .info { margin-top: 10px; color: #888; font-size: 12px; }
+        body { background: #000; color: #00ff41; font-family: monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        #panel { padding: 15px; background: #0a0a0a; border-bottom: 2px solid #00ff41; display: flex; gap: 10px; z-index: 10; }
+        input { flex: 1; padding: 12px; background: #111; border: 1px solid #00ff41; color: #00ff41; outline: none; font-size: 14px; }
+        button { padding: 12px 20px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        #container { flex: 1; position: relative; background: #000; }
+        iframe { width: 100%; height: 100%; border: none; background: #000; }
+        .overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; width: 80%; }
     </style>
 </head>
 <body>
 
-<div class="box" id="setup">
-    <h1>[ LORD-CLEANER ]</h1>
-    <p>Вставь ссылку на страницу фильма:</p>
-    <input type="text" id="url" placeholder="https://nw.lordfilm133.ru/filmy/42292-venom...">
-    <button onclick="play()">СМОТРЕТЬ БЕЗ РЕКЛАМЫ</button>
-    <p class="info">Видео откроется прямо здесь без перехода на сайт</p>
+<div id="panel">
+    <strong>[ CLEANER_V8 ]</strong>
+    <input type="text" id="targetUrl" placeholder="Вставь ссылку на фильм...">
+    <button onclick="cleanLoad()">ОЧИСТИТЬ И ОТКРЫТЬ</button>
 </div>
 
-<div id="player-box">
-    <iframe id="video" src="" allowfullscreen></iframe>
-    <br>
-    <button onclick="location.reload()" style="margin-top:20px; background:#333; color:#fff;">НАЗАД</button>
+<div id="container">
+    <div id="intro" class="overlay">
+        <h2>СИСТЕМА ГОТОВА</h2>
+        <p>Вставьте ссылку. Реклама и всплывающие окна будут заблокированы автоматически.</p>
+    </div>
+    
+    <iframe id="view" 
+            sandbox="allow-forms allow-scripts allow-same-origin" 
+            src="" 
+            style="display:none;">
+    </iframe>
 </div>
 
 <script>
-    function play() {
-        const val = document.getElementById('url').value.trim();
-        if(!val) return alert('Вставь ссылку!');
+    function cleanLoad() {
+        const url = document.getElementById('targetUrl').value.trim();
+        if(!url) return alert('Вставь ссылку!');
 
-        // Извлекаем ID (цифры) из ссылки. Например 42292
-        const match = val.match(/\/(\d+)-/);
-        const id = match ? match[1] : null;
-
-        if(!id) {
-            alert('Не удалось распознать фильм. Вставьте полную ссылку на страницу Лордфильма!');
-            return;
-        }
-
-        // Прячем ввод, показываем плеер
-        document.getElementById('setup').style.display = 'none';
-        document.getElementById('player-box').style.display = 'block';
-
-        // Используем самый стабильный плеер-агрегатор
-        // Он берет ID и выдает видео. Это НЕ редирект, это вставка видео в твой сайт.
-        document.getElementById('video').src = "https://v1649174020.vcdn.site/embed/" + id;
+        // Прячем текст, показываем плеер
+        document.getElementById('intro').style.display = 'none';
+        const frame = document.getElementById('view');
+        frame.style.display = 'block';
         
-        // Сюда можешь вставить свою Adsterra, она откроется ПОВЕРХ при первом клике
+        // Загружаем сайт
+        frame.src = url;
+
+        // ВТОРАЯ СТЕПЕНЬ ЗАЩИТЫ: 
+        // При попытке кликнуть на рекламу внутри фрейма, sandbox её не выпустит.
+        // Если хочешь заработать, добавь свою рекламу Adsterra тут:
         // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
     }
 </script>
