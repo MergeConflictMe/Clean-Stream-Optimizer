@@ -3,60 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER | Оренбург Power</title>
+    <title>LORD-CLEANER | Оренбург</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; flex-direction: column; }
-        .box { border: 2px solid #00ff41; padding: 20px; width: 90%; max-width: 600px; text-align: center; }
+        body { background: #000; color: #00ff41; font-family: monospace; text-align: center; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { border: 2px solid #00ff41; padding: 30px; background: #050505; width: 90%; max-width: 400px; box-shadow: 0 0 15px #00ff41; }
         input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 18px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #player-box { display: none; width: 100%; height: 100%; position: fixed; top: 0; left: 0; background: #000; z-index: 999; }
-        iframe { width: 100%; height: 100%; border: none; }
-        .close-btn { position: absolute; top: 10px; right: 10px; padding: 10px; background: red; color: white; border: none; cursor: pointer; z-index: 1000; }
+        button { width: 100%; padding: 20px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
-<div class="box" id="ui">
-    <h1>[ LORD-CLEANER ]</h1>
-    <p>Вставь ссылку на Венома (или любой фильм):</p>
-    <input type="text" id="movieUrl" placeholder="https://nw.lordfilm...">
-    <button class="btn" onclick="cleanStart()">ОТКРЫТЬ БЕЗ РЕКЛАМЫ</button>
-</div>
-
-<div id="player-box">
-    <button class="close-btn" onclick="location.reload()">ЗАКРЫТЬ</button>
-    <iframe id="videoPlayer" src="" allowfullscreen></iframe>
+<div class="box">
+    <h2>[ CLEAN-VIEW V9 ]</h2>
+    <p>Вставь ссылку на Лордфильм:</p>
+    <input type="text" id="url" placeholder="https://nw.lordfilm...">
+    <button onclick="cleanGo()">ОТКРЫТЬ БЕЗ РЕКЛАМЫ</button>
 </div>
 
 <script>
-    function cleanStart() {
-        const url = document.getElementById('movieUrl').value.trim();
-        if(!url) return alert('Вставь ссылку!');
+    function cleanGo() {
+        const link = document.getElementById('url').value.trim();
+        if(!link) return alert('Вставь ссылку!');
 
-        // Извлекаем ID фильма (цифры в ссылке)
-        const match = url.match(/\/(\d+)-/);
-        const id = match ? match[1] : null;
+        // Мы используем универсальный сервис Lidplay (через flicksbar)
+        // Он берет ссылку и выдает чистый плеер БЕЗ РЕКЛАМЫ КАЗИНО.
+        const lidplayUrl = "https://flicksbar.cc/embed/search?url=" + encodeURIComponent(link);
 
-        if(!id) {
-            alert('Не удалось распознать ID фильма. Убедись, что ссылка полная!');
-            return;
-        }
-
-        // Показываем плеер
-        document.getElementById('ui').style.display = 'none';
-        document.getElementById('player-box').style.display = 'block';
-
-        // Используем агрегатор, который выдает ЧИСТЫЙ плеер по ID
-        // Мы НЕ загружаем сайт Лордфильма, мы берем только видео из базы
-        const playerUrl = "https://vidsrc.me/embed/movie?imdb=" + id; 
-        
-        // ВТОРОЙ ВАРИАНТ (если первый не алё):
-        const backupUrl = "https://flicksbar.cc/embed/search?url=" + encodeURIComponent(url);
-
-        document.getElementById('videoPlayer').src = backupUrl;
-
-        // ДЕНЬГИ (Adsterra)
+        // ТВОЯ ВЫГОДА (Замени на свою Adsterra, если хочешь заработать):
         // window.open('ТВОЯ_ССЫЛКА_ADSTERRA', '_blank');
+
+        // Переходим на чистый плеер
+        window.location.href = lidplayUrl;
     }
 </script>
 
