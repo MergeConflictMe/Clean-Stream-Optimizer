@@ -3,42 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER | Auto-Block</title>
+    <title>LORD-CLEANER | Оренбург</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .box { border: 2px solid #00ff41; padding: 30px; background: #050505; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 0 20px #00ff41; }
-        input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 20px; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 20px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .info { font-size: 10px; color: #555; margin-top: 15px; }
+        body { background: #000; color: #00ff41; font-family: monospace; text-align: center; padding: 20px; }
+        .box { border: 2px solid #00ff41; padding: 20px; background: #050505; margin-bottom: 20px; }
+        input { width: 100%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 15px; box-sizing: border-box; }
+        .step { background: #222; padding: 10px; margin: 10px 0; border-left: 4px solid #00ff41; text-align: left; font-size: 14px; }
+        button { width: 100%; padding: 15px; background: #00ff41; color: #000; font-weight: bold; border: none; cursor: pointer; margin-bottom: 10px; }
+        .copy-btn { background: #555; color: #fff; }
     </style>
 </head>
 <body>
-
-<div class="box">
-    <h2>[ CLEAN-AUTO ]</h2>
-    <p>Вставь ссылку на фильм:</p>
-    <input type="text" id="target" placeholder="https://nw.lordfilm...">
-    <button onclick="smartGo()">УБРАТЬ РЕКЛАМУ И ПЕРЕЙТИ</button>
-    <p class="info">Скрипты казино будут блокированы при переходе</p>
-</div>
-
-<script>
-    function smartGo() {
-        const url = document.getElementById('target').value.trim();
-        if(!url) return alert('Вставь ссылку!');
-
-        // МЕТОД: Мы оборачиваем ссылку в специальный фильтр, 
-        // который ломает рекламные скрипты Лордфильма еще до загрузки.
-        // Это самый "чистый" способ без написания расширений.
-        const cleanJump = "https://www.google.com/search?q=cache:" + encodeURIComponent(url);
+    <div class="box">
+        <h1>[ LORD-CLEANER ]</h1>
+        <input type="text" id="link" placeholder="Вставь ссылку на фильм...">
         
-        // ВТОРОЙ ВАРИАНТ (через анонимайзер, который режет JS):
-        const proxyJump = "https://hidester.com/proxy/go.php?u=" + encodeURIComponent(url);
+        <div class="step">Шаг 1: Скопируй "Киллер-код"</div>
+        <button class="copy-btn" onclick="copyCode()">СКОПИРОВАТЬ КОД</button>
 
-        // Попробуем через Hidester - он сейчас лучший для Оренбурга
-        window.location.href = proxyJump;
-    }
-</script>
+        <div class="step">Шаг 2: Перейди на сайт</div>
+        <button onclick="goToSite()">ОТКРЫТЬ ЛОРДФИЛЬМ</button>
+        
+        <p style="font-size: 11px; color: #888;">После перехода вставь код в адресную строку и нажми перейти</p>
+    </div>
 
+    <script>
+        function copyCode() {
+            const code = "javascript:(function(){document.querySelectorAll('.reklama, .ads, [class*=\"casino\"]').forEach(el=>el.remove()); window.open=function(){return null;}; alert('РЕКЛАМА УБИТА');})();";
+            navigator.clipboard.writeText(code);
+            alert("Код скопирован! Теперь вставь его в адресную строку на Лордфильме.");
+        }
+
+        function goToSite() {
+            const url = document.getElementById('link').value.trim();
+            if(url) window.location.href = url;
+            else alert("Сначала вставь ссылку!");
+        }
+    </script>
 </body>
 </html>
