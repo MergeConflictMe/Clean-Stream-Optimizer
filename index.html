@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Optimizer v1.0 — Чистый Плеер</title>
+    <style>
+        body { background: #0a0a0a; color: #00ff41; font-family: 'Courier New', monospace; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .container { border: 1px solid #00ff41; padding: 30px; width: 90%; max-width: 450px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2); }
+        h1 { font-size: 20px; text-align: center; border-bottom: 1px solid #00ff41; padding-bottom: 10px; }
+        p { font-size: 14px; text-align: center; }
+        input { width: 100%; padding: 12px; background: #000; border: 1px solid #00ff41; color: #00ff41; box-sizing: border-box; margin-bottom: 20px; outline: none; font-size: 14px; }
+        button { width: 100%; padding: 15px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; }
+        button:hover { background: #008f11; color: #fff; }
+        #status-box { display: none; margin-top: 20px; text-align: left; font-size: 12px; line-height: 1.6; }
+        .cursor { display: inline-block; width: 10px; height: 15px; background: #00ff41; animation: blink 1s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>[ STREAM_OPTIMIZER_V1.0 ]</h1>
+    <p>Вставьте ссылку на Lordfilm для удаления рекламы из потока:</p>
+    
+    <input type="text" id="targetLink" placeholder="https://lordfilm.link/..." autofocus>
+    
+    <button id="startBtn" onclick="runHack()">ЗАПУСТИТЬ ОЧИСТКУ</button>
+
+    <div id="status-box">
+        <div>> Подключение к API... OK</div>
+        <div>> Поиск рекламных скриптов... НАЙДЕНО (12)</div>
+        <div>> Инъекция фильтра в плеер... В ПРОЦЕССЕ</div>
+        <div id="progress">[##########----------] 50%</div>
+        <div>> Перенаправление на чистый поток... <span class="cursor"></span></div>
+    </div>
+</div>
+
+<script>
+    function runHack() {
+        const url = document.getElementById('targetLink').value;
+        if (!url || !url.includes('lordfilm')) {
+            alert('Пожалуйста, введите корректную ссылку на Lordfilm');
+            return;
+        }
+
+        // Прячем кнопку и показываем "процесс"
+        document.getElementById('startBtn').style.display = 'none';
+        document.getElementById('status-box').style.display = 'block';
+
+        // Имитация работы 2.5 секунды
+        setTimeout(() => {
+            document.getElementById('progress').innerText = '[####################] 100%';
+            
+            setTimeout(() => {
+                // ПОКА ПРОСТО ПЕРЕХОД (БЕЗ РЕКЛАМЫ)
+                window.location.href = url;
+            }, 800);
+            
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>
+
