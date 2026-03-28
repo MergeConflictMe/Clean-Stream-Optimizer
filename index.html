@@ -3,49 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEANER | Оренбург</title>
+    <title>[ LORD-CLEANER ]</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: monospace; text-align: center; padding: 20px; margin: 0; }
-        .box { border: 2px solid #00ff41; padding: 20px; background: #050505; max-width: 800px; margin: 0 auto; }
-        input { width: 90%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 15px; }
-        button { width: 90%; padding: 15px; background: #00ff41; color: #000; font-weight: bold; border: none; cursor: pointer; }
-        #kinobox-player { margin-top: 20px; width: 100%; min-height: 450px; background: #111; border: 1px solid #333; }
+        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
+        .terminal { border: 2px solid #00ff41; max-width: 900px; margin: 0 auto; background: #050505; padding: 20px; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
+        input { width: 80%; padding: 15px; background: #111; border: 1px solid #00ff41; color: #00ff41; margin-bottom: 15px; outline: none; }
+        button { width: 80%; padding: 15px; background: #00ff41; color: #000; font-weight: bold; border: none; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #fff; box-shadow: 0 0 10px #00ff41; }
+        .video-container { margin-top: 20px; display: none; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 1px solid #222; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+        .hint { color: #888; font-size: 11px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="box">
-        <h1>[ LORD-CLEANER ]</h1>
-        <p>Введи название фильма или сериала:</p>
-        <input type="text" id="search-input" placeholder="Например: Брат 2">
-        <button onclick="searchMovie()">НАЙТИ И СМОТРЕТЬ</button>
+<div class="terminal">
+    <h1>[ SYSTEM: LORD-CLEANER ]</h1>
+    <p>Введите название фильма или ID Кинопоиска:</p>
+    
+    <input type="text" id="movieSearch" placeholder="Например: Брат 2">
+    <br>
+    <button onclick="startStream()">ЗАПУСТИТЬ ОЧИСТКУ И ПРОСМОТР</button>
 
-        <div id="kinobox-player"></div>
+    <div id="playerWrapper" class="video-container">
+        <iframe id="targetFrame" src="" allowfullscreen></iframe>
     </div>
+    
+    <p class="hint">Совет: Если по названию не находит, вставь цифры из ссылки Кинопоиска.</p>
+</div>
 
-    <script src="https://kinobox.tv/static/kinobox.min.js"></script>
-    <script>
-        function searchMovie() {
-            const query = document.getElementById('search-input').value;
-            if (!query) return alert("Введите название!");
+<script>
+    function startStream() {
+        const val = document.getElementById('movieSearch').value.trim();
+        const frame = document.getElementById('targetFrame');
+        const wrapper = document.getElementById('playerWrapper');
 
-            // Очищаем старый плеер перед новым поиском
-            document.getElementById('kinobox-player').innerHTML = '';
+        if (!val) return alert("Введите данные!");
 
-            // Запуск поиска по базам
-            new Kinobox('#kinobox-player', {
-                search: {
-                    query: query
-                },
-                players: {
-                    // Список баз, по которым ищем
-                    alloha: { enable: true },
-                    videocdn: { enable: true },
-                    voidboost: { enable: true }
-                }
-            }).init();
+        let url = "";
+
+        // Если введены только цифры (ID Кинопоиска)
+        if (!isNaN(val)) {
+            url = `https://v1692283038.vcdn.pro/kp/${val}`; 
+        } else {
+            // Если введено название — используем поиск через плеер Alloha (он обычно стабилен)
+            url = `https://api.alloha.tv/?name=${encodeURIComponent(val)}`;
         }
-    </script>
+
+        frame.src = url;
+        wrapper.style.display = 'block';
+        
+        // Автоматическая прокрутка к плееру
+        window.scrollTo({ top: wrapper.offsetTop, behavior: 'smooth' });
+    }
+</script>
 
 </body>
 </html>
