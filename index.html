@@ -3,62 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LORD-CLEAN-PLAYER</title>
+    <title>LORD-CLEANER | No-Redirect Edition</title>
     <style>
-        body { background: #000; color: #00ff41; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
-        .main-box { width: 90%; max-width: 800px; text-align: center; border: 1px solid #333; padding: 20px; background: #0a0a0a; }
-        input { width: 80%; padding: 12px; background: #000; border: 1px solid #00ff41; color: #fff; margin-bottom: 15px; outline: none; }
-        button { padding: 12px 30px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #player-area { display: none; margin-top: 20px; width: 100%; position: relative; padding-bottom: 56.25%; height: 0; background: #000; }
-        #player-area iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
-        .loader { display: none; margin: 20px; color: yellow; }
+        body { background: #000; color: #00ff41; font-family: monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        #top-panel { padding: 15px; background: #0a0a0a; border-bottom: 1px solid #00ff41; display: flex; gap: 10px; align-items: center; }
+        input { flex: 1; padding: 12px; background: #111; border: 1px solid #00ff41; color: #00ff41; outline: none; }
+        button { padding: 12px 20px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; }
+        #viewer-container { flex: 1; width: 100%; position: relative; background: #111; }
+        /* Сам фрейм с сайтом */
+        iframe { width: 100%; height: 100%; border: none; display: none; }
+        .placeholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
     </style>
 </head>
 <body>
 
-<div class="main-box">
-    <h2>[ ЧИСТЫЙ ПЛЕЕР v7 ]</h2>
-    <div id="input-zone">
-        <p>Вставь ссылку с Lordfilm для очистки:</p>
-        <input type="text" id="filmUrl" placeholder="https://nw.lordfilm...">
-        <br>
-        <button onclick="startCleaning()">ЗАПУСТИТЬ ВИДЕО</button>
-    </div>
+<div id="top-panel">
+    <strong>[ CLEANER ]</strong>
+    <input type="text" id="urlInput" placeholder="Вставьте ссылку на Венома (или другой фильм)...">
+    <button onclick="loadStream()">СМОТРЕТЬ БЕЗ РЕКЛАМЫ</button>
+</div>
 
-    <div id="loading" class="loader">ИДЕТ ПОИСК ВИДЕО В БАЗЕ...</div>
-
-    <div id="player-area">
-        <iframe id="videoFrame" src="" allowfullscreen></iframe>
+<div id="viewer-container">
+    <div id="msg" class="placeholder">
+        <h3>Система очистки готова.</h3>
+        <p>Вставьте ссылку и нажмите кнопку. Всплывающие окна будут заблокированы.</p>
     </div>
+    
+    <iframe id="mainView" 
+            sandbox="allow-forms allow-scripts allow-same-origin" 
+            src="">
+    </iframe>
 </div>
 
 <script>
-    function startCleaning() {
-        const url = document.getElementById('filmUrl').value.trim();
+    function loadStream() {
+        const url = document.getElementById('urlInput').value.trim();
         if(!url) return alert('Вставь ссылку!');
 
-        document.getElementById('input-zone').style.display = 'none';
-        document.getElementById('loading').style.display = 'block';
+        const frame = document.getElementById('mainView');
+        const msg = document.getElementById('msg');
 
-        // Мы не переходим в Гугл. Мы берем только ID фильма из твоей ссылки
-        // Например из /42292-venom.html вытаскиваем 42292
-        const match = url.match(/\/(\d+)-/);
-        const movieId = match ? match[1] : null;
-
+        msg.innerHTML = "<h3>ИДЕТ ФИЛЬТРАЦИЯ...</h3>";
+        
+        // Загружаем сайт прямо здесь
+        frame.src = url;
+        frame.style.display = 'block';
+        
+        // Через 2 секунды убираем сообщение
         setTimeout(() => {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('player-area').style.display = 'block';
-
-            // Если нашли ID - используем прямую базу. Если нет - универсальный обходчик.
-            let finalSrc;
-            if(movieId) {
-                finalSrc = "https://v1649174020.vcdn.site/embed/" + movieId;
-            } else {
-                finalSrc = "https://black-vid.com/embed?url=" + encodeURIComponent(url);
-            }
-
-            document.getElementById('videoFrame').src = finalSrc;
-        }, 1500);
+            msg.style.display = 'none';
+        }, 2000);
     }
 </script>
 
